@@ -2,10 +2,6 @@
 
 #include <iostream>
 
-// Included here to get the name of the key via glfwGetKeyName().
-// TODO: Every InputComponent is going to need this. Find a better way?
-#include <GLFW/glfw3.h>
-
 using example_two::PlayerInputComponent;
 
 PlayerInputComponent::PlayerInputComponent()
@@ -13,20 +9,23 @@ PlayerInputComponent::PlayerInputComponent()
 {
 }
 
-void PlayerInputComponent::HandleKeyPress(int aKey,
-                                          int aScancode,
+void PlayerInputComponent::HandleKeyPress(const core::KeyCode& aCode,
                                           int aMods)
 {
-  const char* keyName = glfwGetKeyName(aKey, aScancode);
-  if(keyName != nullptr)
+  switch(aCode)
   {
-    std::cout << "You just pressed "
-              << keyName
-              << "!"
-              << std::endl;
-  }
-  else
-  {
-    std::cout << "You just pressed a key GLFW didn't recognize!" << std::endl;
+    case core::KeyCode::eKEY_UNKNOWN:
+    {
+      std::cout << "You pressed an unrecognized key!" << std::endl;
+      break;
+    }
+    default:
+    {
+      std::cout << "You pressed the "
+                << core::GetKeyName(aCode)
+                << " key!"
+                << std::endl;
+      break;
+    }
   }
 }

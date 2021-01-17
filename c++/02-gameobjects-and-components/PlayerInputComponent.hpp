@@ -18,8 +18,7 @@ namespace example_two
     public:
       PlayerInputComponent();
 
-      void HandleKeyPress(int aKey,
-                          int aScancode,
+      void HandleKeyPress(const core::KeyCode& aCode,
                           int aMods) override;
   };
 }
