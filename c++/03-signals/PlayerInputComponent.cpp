@@ -7,8 +7,13 @@
 using example_three::PlayerInputComponent;
 
 PlayerInputComponent::PlayerInputComponent()
-  : InputComponent()
+  : Component()
 {
+  core::KeyPressed.Connect(*this, [this](const core::KeyCode& aCode,
+                                         int aMods)
+  {
+    this->HandleKeyPress(aCode, aMods);
+  });
 }
 
 void PlayerInputComponent::HandleKeyPress(const core::KeyCode& aCode,

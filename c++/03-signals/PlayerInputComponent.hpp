@@ -1,7 +1,8 @@
 #ifndef PLAYERINPUTCOMPONENT_HPP
 #define PLAYERINPUTCOMPONENT_HPP
 
-#include <UrsineEngine/InputComponent.hpp>
+#include <UrsineEngine/CoreSignals.hpp>
+#include <UrsineEngine/Component.hpp>
 
 namespace example_three
 {
@@ -13,13 +14,14 @@ namespace example_three
    * This component class outputs a message whenever a key is pressed,
    * and if that key was the "q" key, it notifies the appropriate signal.
    */
-  class PlayerInputComponent : public core::InputComponent
+  class PlayerInputComponent : public core::Component
   {
     public:
       PlayerInputComponent();
 
+    private:
       void HandleKeyPress(const core::KeyCode& aCode,
-                          int aMods) override;
+                          int aMods);
   };
 }
 
