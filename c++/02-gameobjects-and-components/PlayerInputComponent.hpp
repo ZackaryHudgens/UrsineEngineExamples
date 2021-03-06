@@ -14,13 +14,13 @@ namespace example_two
    * This component class simply outputs a message whenever a key
    * is pressed. We'll expand on this later.
    */
-  class PlayerInputComponent : public core::Component
+  class PlayerInputComponent : public UrsineCore::Component
   {
     public:
       PlayerInputComponent();
 
     private:
-      void HandleKeyPress(const core::KeyCode& aCode,
+      void HandleKeyPress(const UrsineCore::KeyCode& aCode,
                           int aMods);
   };
 }

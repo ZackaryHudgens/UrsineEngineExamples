@@ -2,7 +2,7 @@
 
 int main()
 {
-  core::Scene scene;
+  UrsineCore::Scene scene;
 
   /**
    * The Environment class can be accessed with the macro "env" as shown.

@@ -14,13 +14,13 @@ namespace example_three
    * This component class outputs a message whenever a key is pressed,
    * and if that key was the "q" key, it notifies the appropriate signal.
    */
-  class PlayerInputComponent : public core::Component
+  class PlayerInputComponent : public UrsineCore::Component
   {
     public:
       PlayerInputComponent();
 
     private:
-      void HandleKeyPress(const core::KeyCode& aCode,
+      void HandleKeyPress(const UrsineCore::KeyCode& aCode,
                           int aMods);
   };
 }

@@ -16,7 +16,7 @@ namespace example_three
    * to connect to a signal, the object in question must be an Observer.
    * GameObjects and Components are Observers as well.
    */
-  class AchievementsTracker : public core::Observer
+  class AchievementsTracker : public UrsineCore::Observer
   {
     public:
       AchievementsTracker();

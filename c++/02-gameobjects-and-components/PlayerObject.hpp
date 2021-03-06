@@ -9,7 +9,7 @@ namespace example_two
    * A basic player class. Creates and adds a PlayerInputComponent
    * upon construction.
    */
-  class PlayerObject : public core::GameObject
+  class PlayerObject : public UrsineCore::GameObject
   {
     public:
       PlayerObject();

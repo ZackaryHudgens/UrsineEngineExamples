@@ -10,7 +10,7 @@ namespace example_three
    * A basic player class. Now it takes a name as an argument during
    * construction.
    */
-  class PlayerObject : public core::GameObject
+  class PlayerObject : public UrsineCore::GameObject
   {
     public:
       PlayerObject(const std::string& aName);

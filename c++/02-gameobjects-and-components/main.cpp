@@ -8,7 +8,7 @@ int main()
   /**
    * Create a Scene and a PlayerObject, then add the PlayerObject to the Scene.
    */
-  core::Scene testScene;
+  UrsineCore::Scene testScene;
   auto player = std::make_unique<example_two::PlayerObject>();
   testScene.AddObject(std::move(player));
 

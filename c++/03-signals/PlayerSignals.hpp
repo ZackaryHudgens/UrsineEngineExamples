@@ -22,7 +22,7 @@ namespace example_three
    * can be anything, but in this case, the only argument is a pointer
    * to a PlayerObject.
    */
-  typedef core::SignalT<PlayerObject*> QPressedSignal;
+  typedef UrsineCore::SignalT<PlayerObject*> QPressedSignal;
 
   /**
    * Next, create references to the actual signals. The 'extern' keyword

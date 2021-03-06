@@ -7,7 +7,7 @@
 using example_three::AchievementsTracker;
 
 AchievementsTracker::AchievementsTracker()
-  : core::Observer()
+  : UrsineCore::Observer()
 {
   /**
    * Connect to the QPressed signal. By doing this, whenever the signal

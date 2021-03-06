@@ -7,19 +7,19 @@ using example_two::PlayerInputComponent;
 PlayerInputComponent::PlayerInputComponent()
   : Component()
 {
-  core::KeyPressed.Connect(*this, [this](const core::KeyCode& aCode,
-                                         int aMods)
+  UrsineCore::KeyPressed.Connect(*this, [this](const UrsineCore::KeyCode& aCode,
+                                               int aMods)
   {
     this->HandleKeyPress(aCode, aMods);
   });
 }
 
-void PlayerInputComponent::HandleKeyPress(const core::KeyCode& aCode,
+void PlayerInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
                                           int aMods)
 {
   switch(aCode)
   {
-    case core::KeyCode::eKEY_UNKNOWN:
+    case UrsineCore::KeyCode::eKEY_UNKNOWN:
     {
       std::cout << "You pressed an unrecognized key!" << std::endl;
       break;
@@ -27,7 +27,7 @@ void PlayerInputComponent::HandleKeyPress(const core::KeyCode& aCode,
     default:
     {
       std::cout << "You pressed the "
-                << core::GetKeyName(aCode)
+                << UrsineCore::GetKeyName(aCode)
                 << " key!"
                 << std::endl;
       break;
