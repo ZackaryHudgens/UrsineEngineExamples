@@ -2,6 +2,9 @@
 #define TRIANGLEOBJECT_HPP
 
 #include <UrsineEngine/GameObject.hpp>
+#include <UrsineEngine/MeshComponent.hpp>
+
+using UrsineRenderer::MeshComponent;
 
 namespace example_four
 {
@@ -13,6 +16,10 @@ namespace example_four
   {
     public:
       TriangleObject();
+
+    private:
+      void SetupShaders(MeshComponent& aMesh);
+      void SetupVertexInfo(MeshComponent& aMesh);
   };
 }
 
