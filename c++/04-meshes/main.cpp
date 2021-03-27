@@ -9,8 +9,8 @@ int main()
 
   UrsineCore::Scene scene;
 
-  auto triangle = std::make_unique<example_four::TriangleObject>();
-  scene.AddObject(std::move(triangle));
+  //auto triangle = std::make_unique<example_four::TriangleObject>();
+  //scene.AddObject(std::move(triangle));
 
   env.LoadScene(scene);
   env.Run();

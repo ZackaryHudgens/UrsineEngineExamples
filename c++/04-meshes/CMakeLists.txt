@@ -12,7 +12,9 @@ include("cmake/CMakeRC.cmake")
 cmrc_add_resource_library(ShaderLib resources/shaders/SolidColor.frag
                                     resources/shaders/SolidColor.vert
                                     resources/shaders/PerVertexColor.frag
-                                    resources/shaders/PerVertexColor.vert)
+                                    resources/shaders/PerVertexColor.vert
+                                    resources/shaders/Texture.vert
+                                    resources/shaders/Texture.frag)
 
 target_link_libraries(meshes PUBLIC
                       ${URSINE_LIBRARIES}
@@ -21,3 +23,4 @@ target_include_directories(meshes PUBLIC
                            ${URSINE_INCLUDE_DIRS})
 
 install(TARGETS meshes DESTINATION ${CPP_INSTALL_DIR}/04-meshes)
+install(DIRECTORY resources DESTINATION ${CPP_INSTALL_DIR}/04-meshes)

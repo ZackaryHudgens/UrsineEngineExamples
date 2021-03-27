@@ -4,6 +4,8 @@
 #include <UrsineEngine/MeshComponent.hpp>
 #include <UrsineEngine/Shader.hpp>
 
+#include <iostream>
+
 using UrsineRenderer::MeshComponent;
 
 using example_four::TriangleInputComponent;
@@ -36,6 +38,18 @@ void TriangleInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
       for(auto& triangleMesh : GetParent()->GetComponentsOfType<MeshComponent>())
       {
         triangleMesh->SetCurrentShader("perVertexColor");
+      }
+      break;
+    }
+    case UrsineCore::KeyCode::eKEY_UP:
+    {
+      for(auto& triangleMesh : GetParent()->GetComponentsOfType<MeshComponent>())
+      {
+        triangleMesh->SetCurrentShader("texture");
+        if(triangleMesh->GetCurrentShader() != nullptr)
+        {
+          std::cout << "shader loaded successfully" << std::endl;
+        }
       }
       break;
     }

@@ -1,5 +1,7 @@
 #include "TriangleObject.hpp"
 
+#include <UrsineEngine/Texture.hpp>
+
 #include "TriangleInputComponent.hpp"
 
 #include <cmrc/cmrc.hpp>
@@ -9,8 +11,7 @@ CMRC_DECLARE(ShaderLib);
 using UrsineRenderer::MeshComponent;
 using UrsineRenderer::MeshVertex;
 using UrsineRenderer::Shader;
-using UrsineRenderer::VertexList;
-using UrsineRenderer::IndexList;
+using UrsineRenderer::Texture;
 
 using example_four::TriangleInputComponent;
 using example_four::TriangleObject;
@@ -51,30 +52,40 @@ void TriangleObject::SetupShaders(MeshComponent& aMesh)
 
   Shader perVertexColor(vertexFile.begin(), fragmentFile.begin());
   aMesh.AddShader("perVertexColor", Shader(vertexFile.begin(), fragmentFile.begin()));
+
+  // Texture shader
+  vertexFile = fs.open("resources/shaders/Texture.vert");
+  fragmentFile = fs.open("resources/shaders/Texture.frag");
+
+  Shader texture(vertexFile.begin(), fragmentFile.begin());
+
+  Texture wall;
+  wall.LoadImageFromFile("resources/wall.jpg");
+  texture.AddTexture(wall);
+
+  texture.SetInt("texSampler", 0);
+  aMesh.AddShader("texture", Shader(vertexFile.begin(), fragmentFile.begin()));
 }
 
 void TriangleObject::SetupVertexInfo(MeshComponent& aMesh)
 {
   // Create the 3D vertices for this triangle.
-  VertexList vertices;
   MeshVertex vertex;
   vertex.mPosition = glm::vec3(-0.5, -0.5, 0.0);
   vertex.mColor = glm::vec3(1.0, 0.0, 0.0);
-  vertices.emplace_back(vertex);
+  vertex.mTexCoords = glm::vec2(0.0, 0.0);
+  aMesh.AddVertex(vertex);
   vertex.mPosition = glm::vec3(0.5, -0.5, 0.0);
   vertex.mColor = glm::vec3(0.0, 1.0, 0.0);
-  vertices.emplace_back(vertex);
+  vertex.mTexCoords = glm::vec2(1.0, 0.0);
+  aMesh.AddVertex(vertex);
   vertex.mPosition = glm::vec3(0.0, 0.5, 0.0);
   vertex.mColor = glm::vec3(0.0, 0.0, 1.0);
-  vertices.emplace_back(vertex);
-
-  aMesh.SetVertices(vertices);
+  vertex.mTexCoords = glm::vec2(0.5, 1.0);
+  aMesh.AddVertex(vertex);
 
   // Specify the order in which to draw these vertices.
-  IndexList indices;
-  indices.emplace_back(0);
-  indices.emplace_back(1);
-  indices.emplace_back(2);
-
-  aMesh.SetIndices(indices);
+  aMesh.AddIndex(0);
+  aMesh.AddIndex(1);
+  aMesh.AddIndex(2);
 }
