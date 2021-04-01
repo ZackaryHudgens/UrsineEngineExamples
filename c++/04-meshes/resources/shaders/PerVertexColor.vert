@@ -7,9 +7,12 @@ layout (location = 1) in vec3 aVertexColor;
 // Output variables
 out vec3 vertexColor;
 
+// Uniform variables
+uniform mat4 modelMatrix;
+
 void main()
 {
   vertexColor = aVertexColor;
 
-  gl_Position = vec4(aPosition, 1.0);
+  gl_Position = modelMatrix * vec4(aPosition, 1.0);
 }

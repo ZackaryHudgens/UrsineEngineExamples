@@ -9,16 +9,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include("cmake/CMakeRC.cmake")
 
 # Create a library containing the shader resources.
-cmrc_add_resource_library(ShaderLib resources/shaders/SolidColor.frag
-                                    resources/shaders/SolidColor.vert
-                                    resources/shaders/PerVertexColor.frag
-                                    resources/shaders/PerVertexColor.vert
-                                    resources/shaders/Texture.vert
-                                    resources/shaders/Texture.frag)
+cmrc_add_resource_library(ShaderLib_04 resources/shaders/SolidColor.frag
+                                       resources/shaders/SolidColor.vert
+                                       resources/shaders/PerVertexColor.frag
+                                       resources/shaders/PerVertexColor.vert
+                                       resources/shaders/Texture.vert
+                                       resources/shaders/Texture.frag)
 
 target_link_libraries(meshes PUBLIC
                       ${URSINE_LIBRARIES}
-                      ShaderLib)
+                      ShaderLib_04)
 target_include_directories(meshes PUBLIC
                            ${URSINE_INCLUDE_DIRS})
 

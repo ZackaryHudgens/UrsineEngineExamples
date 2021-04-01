@@ -9,10 +9,13 @@ layout (location = 2) in vec2 aTexCoords;
 out vec3 vertexColor;
 out vec2 texCoords;
 
+// Uniform variables
+uniform mat4 modelMatrix;
+
 void main()
 {
   vertexColor = aVertexColor;
   texCoords = aTexCoords;
 
-  gl_Position = vec4(aPosition, 1.0);
+  gl_Position = modelMatrix * vec4(aPosition, 1.0);
 }

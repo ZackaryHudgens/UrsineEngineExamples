@@ -6,7 +6,7 @@
 
 #include <cmrc/cmrc.hpp>
 
-CMRC_DECLARE(ShaderLib);
+CMRC_DECLARE(ShaderLib_04);
 
 using UrsineRenderer::MeshComponent;
 using UrsineRenderer::MeshVertex;
@@ -35,7 +35,7 @@ TriangleObject::TriangleObject()
 
 void TriangleObject::SetupShaders(MeshComponent& aMesh)
 {
-  auto fs = cmrc::ShaderLib::get_filesystem();
+  auto fs = cmrc::ShaderLib_04::get_filesystem();
 
   // Solid Color shader
   auto vertexFile = fs.open("resources/shaders/SolidColor.vert");
