@@ -1,15 +1,15 @@
-#ifndef TRIANGLEINPUTCOMPONENT_HPP
-#define TRIANGLEINPUTCOMPONENT_HPP
+#ifndef CUBEINPUTCOMPONENT_HPP
+#define CUBEINPUTCOMPONENT_HPP
 
 #include <UrsineEngine/CoreSignals.hpp>
 #include <UrsineEngine/Component.hpp>
 
-namespace example_four
+namespace example_five
 {
-  class TriangleInputComponent : public UrsineCore::Component
+  class CubeInputComponent : public UrsineCore::Component
   {
     public:
-      TriangleInputComponent();
+      CubeInputComponent();
 
     private:
       void HandleKeyPress(const UrsineCore::KeyCode& aCode,

@@ -71,14 +71,20 @@ void TriangleObject::SetupVertexInfo(MeshComponent& aMesh)
 {
   // Create the 3D vertices for this triangle.
   MeshVertex vertex;
+
+  // Bottom left
   vertex.mPosition = glm::vec3(-0.5, -0.5, 0.0);
   vertex.mColor = glm::vec3(1.0, 0.0, 0.0);
   vertex.mTexCoords = glm::vec2(0.0, 0.0);
   aMesh.AddVertex(vertex);
+
+  // Bottom right
   vertex.mPosition = glm::vec3(0.5, -0.5, 0.0);
   vertex.mColor = glm::vec3(0.0, 1.0, 0.0);
   vertex.mTexCoords = glm::vec2(1.0, 0.0);
   aMesh.AddVertex(vertex);
+
+  // Top
   vertex.mPosition = glm::vec3(0.0, 0.5, 0.0);
   vertex.mColor = glm::vec3(0.0, 0.0, 1.0);
   vertex.mTexCoords = glm::vec2(0.5, 1.0);

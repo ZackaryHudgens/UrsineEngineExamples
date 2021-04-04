@@ -1,15 +1,15 @@
-#ifndef TRIANGLEOBJECT_HPP
-#define TRIANGLEOBJECT_HPP
+#ifndef CUBEOBJECT_HPP
+#define CUBEOBJECT_HPP
 
 #include <UrsineEngine/GameObject.hpp>
 #include <UrsineEngine/MeshComponent.hpp>
 
-namespace example_four
+namespace example_five
 {
-  class TriangleObject : public UrsineCore::GameObject
+  class CubeObject : public UrsineCore::GameObject
   {
     public:
-      TriangleObject();
+      CubeObject();
 
     private:
       void SetupShaders(UrsineRenderer::MeshComponent& aMesh);

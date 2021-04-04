@@ -9,8 +9,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include("cmake/CMakeRC.cmake")
 
 # Create a library containing the shader resources.
-cmrc_add_resource_library(ShaderLib_05 resources/shaders/TexturedCube.frag
-                                       resources/shaders/TexturedCube.vert)
+cmrc_add_resource_library(ShaderLib_05 resources/shaders/SolidColor.frag
+                                       resources/shaders/SolidColor.vert
+                                       resources/shaders/PerVertexColor.frag
+                                       resources/shaders/PerVertexColor.vert
+                                       resources/shaders/Texture.frag
+                                       resources/shaders/Texture.vert)
 
 target_link_libraries(camera-and-3d-objects PUBLIC
                       ${URSINE_LIBRARIES}

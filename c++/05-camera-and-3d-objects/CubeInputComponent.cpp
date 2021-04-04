@@ -1,4 +1,4 @@
-#include "TriangleInputComponent.hpp"
+#include "CubeInputComponent.hpp"
 
 #include <UrsineEngine/GameObject.hpp>
 #include <UrsineEngine/MeshComponent.hpp>
@@ -8,9 +8,9 @@
 
 using UrsineRenderer::MeshComponent;
 
-using example_four::TriangleInputComponent;
+using example_five::CubeInputComponent;
 
-TriangleInputComponent::TriangleInputComponent()
+CubeInputComponent::CubeInputComponent()
   : Component()
 {
   UrsineCore::KeyPressed.Connect(*this, [this](const UrsineCore::KeyCode& aCode,
@@ -26,32 +26,32 @@ TriangleInputComponent::TriangleInputComponent()
   });
 }
 
-void TriangleInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
-                                            int aMods)
+void CubeInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
+                                        int aMods)
 {
   switch(aCode)
   {
     case UrsineCore::KeyCode::eKEY_Q:
     {
-      for(auto& triangleMesh : GetParent()->GetComponentsOfType<MeshComponent>())
+      for(auto& cubeMesh : GetParent()->GetComponentsOfType<MeshComponent>())
       {
-        triangleMesh->SetCurrentShader("solidColor");
+        cubeMesh->SetCurrentShader("solidColor");
       }
       break;
     }
     case UrsineCore::KeyCode::eKEY_W:
     {
-      for(auto& triangleMesh : GetParent()->GetComponentsOfType<MeshComponent>())
+      for(auto& cubeMesh : GetParent()->GetComponentsOfType<MeshComponent>())
       {
-        triangleMesh->SetCurrentShader("perVertexColor");
+        cubeMesh->SetCurrentShader("perVertexColor");
       }
       break;
     }
     case UrsineCore::KeyCode::eKEY_E:
     {
-      for(auto& triangleMesh : GetParent()->GetComponentsOfType<MeshComponent>())
+      for(auto& cubeMesh : GetParent()->GetComponentsOfType<MeshComponent>())
       {
-        triangleMesh->SetCurrentShader("texture");
+        cubeMesh->SetCurrentShader("texture");
       }
       break;
     }
@@ -82,8 +82,8 @@ void TriangleInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
   }
 }
 
-void TriangleInputComponent::HandleKeyRepeat(const UrsineCore::KeyCode& aCode,
-                                             int aMods)
+void CubeInputComponent::HandleKeyRepeat(const UrsineCore::KeyCode& aCode,
+                                         int aMods)
 {
   switch(aCode)
   {
