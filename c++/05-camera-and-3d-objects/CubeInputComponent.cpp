@@ -4,8 +4,6 @@
 #include <UrsineEngine/MeshComponent.hpp>
 #include <UrsineEngine/Shader.hpp>
 
-#include <iostream>
-
 using UrsineRenderer::MeshComponent;
 
 using example_five::CubeInputComponent;
@@ -17,12 +15,6 @@ CubeInputComponent::CubeInputComponent()
                                                int aMods)
   {
     this->HandleKeyPress(aCode, aMods);
-  });
-
-  UrsineCore::KeyRepeated.Connect(*this, [this](const UrsineCore::KeyCode& aCode,
-                                                int aMods)
-  {
-    this->HandleKeyRepeat(aCode, aMods);
   });
 }
 
@@ -53,58 +45,6 @@ void CubeInputComponent::HandleKeyPress(const UrsineCore::KeyCode& aCode,
       {
         cubeMesh->SetCurrentShader("texture");
       }
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_LEFT:
-    {
-      GetParent()->Rotate(5, glm::vec3(0.0, 1.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_RIGHT:
-    {
-      GetParent()->Rotate(-5, glm::vec3(0.0, 1.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_UP:
-    {
-      GetParent()->Rotate(-5, glm::vec3(1.0, 0.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_DOWN:
-    {
-      GetParent()->Rotate(5, glm::vec3(1.0, 0.0, 0.0));
-      break;
-    }
-    default:
-    {
-      break;
-    }
-  }
-}
-
-void CubeInputComponent::HandleKeyRepeat(const UrsineCore::KeyCode& aCode,
-                                         int aMods)
-{
-  switch(aCode)
-  {
-    case UrsineCore::KeyCode::eKEY_LEFT:
-    {
-      GetParent()->Rotate(5, glm::vec3(0.0, 1.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_RIGHT:
-    {
-      GetParent()->Rotate(-5, glm::vec3(0.0, 1.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_UP:
-    {
-      GetParent()->Rotate(-5, glm::vec3(1.0, 0.0, 0.0));
-      break;
-    }
-    case UrsineCore::KeyCode::eKEY_DOWN:
-    {
-      GetParent()->Rotate(5, glm::vec3(1.0, 0.0, 0.0));
       break;
     }
     default:

@@ -14,8 +14,6 @@ namespace example_five
     private:
       void HandleKeyPress(const UrsineCore::KeyCode& aCode,
                           int aMods);
-      void HandleKeyRepeat(const UrsineCore::KeyCode& aCode,
-                           int aMods);
   };
 }
 
