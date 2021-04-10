@@ -61,7 +61,7 @@ void TriangleObject::SetupShaders(MeshComponent& aMesh)
 
   Texture wall;
   wall.LoadImageFromFile("resources/wall.jpg");
-  texture.AddTexture(wall);
+  aMesh.AddTexture(wall);
 
   texture.SetInt("texSampler", 0);
   aMesh.AddShader("texture", Shader(vertexFile.begin(), fragmentFile.begin()));
