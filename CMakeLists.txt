@@ -5,12 +5,12 @@ project(UrsineEngineExamples)
 # this file for syntax highlighting.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CPP_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/install/c++)
+find_package(UrsineEngine REQUIRED)
 
-# Set example options.
-# Optionally build the C++ examples.
-option(BUILD_CPP_EXAMPLES "Build the C++ examples." ON)
+set(EXAMPLES_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/install)
 
-if(BUILD_CPP_EXAMPLES)
-    add_subdirectory(c++)
-endif()
+add_subdirectory(01-hello-world)
+add_subdirectory(02-gameobjects-and-components)
+add_subdirectory(03-signals)
+add_subdirectory(04-meshes)
+add_subdirectory(05-camera-and-3d-objects)

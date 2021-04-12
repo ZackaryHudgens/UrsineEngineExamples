@@ -1,2 +1,2 @@
 # UrsineEngineExamples
-A collection of examples using the UrsineEngine.
+A collection of tutorials using the UrsineEngine.
