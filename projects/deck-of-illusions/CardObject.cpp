@@ -1,7 +1,5 @@
 #include "CardObject.hpp"
 
-#include "CardObjectRotateComponent.hpp"
-
 #include <cmrc/cmrc.hpp>
 
 CMRC_DECLARE(ShaderLib_Deck);
@@ -24,7 +22,6 @@ CardObject::CardObject(const CardData& aData)
   cardMesh->SetCurrentShader("cardShader");
 
   AddComponent(std::move(cardMesh));
-  AddComponent(std::make_unique<CardObjectRotateComponent>());
 }
 
 glm::vec2 CardObject::GetTextureCoords(const Texture& aTexture,
