@@ -8,7 +8,7 @@ using UrsineRenderer::Texture;
 
 namespace DeckOfIllusions
 {
-  enum Rank
+  enum class Rank
   {
     eTWO,
     eEIGHT,
@@ -17,15 +17,17 @@ namespace DeckOfIllusions
     eJACK,
     eQUEEN,
     eKING,
-    eACE
+    eACE,
+    eJOKER
   };
 
-  enum Suit
+  enum class Suit
   {
     eCLUBS,
     eDIAMONDS,
     eSPADES,
-    eHEARTS
+    eHEARTS,
+    eJOKER
   };
 
   struct CardData
@@ -41,7 +43,7 @@ namespace DeckOfIllusions
       CardObject(const CardData& aData);
 
     private:
-      enum Corner
+      enum class Corner
       {
         eTOP_LEFT,
         eTOP_RIGHT,

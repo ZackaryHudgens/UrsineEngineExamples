@@ -1,5 +1,7 @@
 #include "CardObject.hpp"
 
+#include "CardMovementComponent.hpp"
+
 #include <cmrc/cmrc.hpp>
 
 CMRC_DECLARE(ShaderLib_Deck);
@@ -8,20 +10,31 @@ using UrsineRenderer::MeshComponent;
 using UrsineRenderer::MeshVertex;
 using UrsineRenderer::Shader;
 
+using DeckOfIllusions::CardMovementComponent;
 using DeckOfIllusions::CardObject;
 
 CardObject::CardObject(const CardData& aData)
   : GameObject()
   , mData(aData)
 {
-  auto cardMesh = std::make_unique<MeshComponent>();
+  // Handle invalid data due to Jokers
+  if(mData.mRank == Rank::eJOKER && mData.mSuit != Suit::eJOKER)
+  {
+    mData.mSuit = Suit::eJOKER;
+  }
+  if(mData.mSuit == Suit::eJOKER && mData.mRank != Rank::eJOKER)
+  {
+    mData.mRank = Rank::eJOKER;
+  }
 
+  auto cardMesh = std::make_unique<MeshComponent>();
   SetupShaders(*cardMesh.get());
   SetupVertexInfo(*cardMesh.get());
-
   cardMesh->SetCurrentShader("cardShader");
-
   AddComponent(std::move(cardMesh));
+
+  auto cardMovement = std::make_unique<CardMovementComponent>();
+  AddComponent(std::move(cardMovement));
 }
 
 glm::vec2 CardObject::GetTextureCoords(const Texture& aTexture,
@@ -30,78 +43,127 @@ glm::vec2 CardObject::GetTextureCoords(const Texture& aTexture,
                                        bool aBack)
 {
   int row, column = 0;
-  int cardWidth = 539;
-  int cardHeight = 766;
 
-  double xCoord, yCoord = 0.0;
-
-  // TODO: fix the deck texture so this makes sense
-  if(!aBack)
+  if(aBack)
   {
-    switch(aCorner)
+    row = 5;
+    column = 2;
+  }
+  else
+  {
+    // Suits are organized in the deck texture by row.
+    switch(mData.mSuit)
     {
-      case Corner::eTOP_LEFT:
+      case Suit::eCLUBS:
       {
-        xCoord = 0.0;
-        yCoord = 766.0 / 5362.0;
+        row = 1;
         break;
       }
-      case Corner::eTOP_RIGHT:
+      case Suit::eDIAMONDS:
       {
-        xCoord = 539.0 / 2695.0;
-        yCoord = 766.0 / 5362.0;
+        row = 2;
         break;
       }
-      case Corner::eBOTTOM_LEFT:
+      case Suit::eSPADES:
       {
-        xCoord = 0.0;
-        yCoord = 0.0;
+        row = 3;
         break;
       }
-      case Corner::eBOTTOM_RIGHT:
+      case Suit::eHEARTS:
       {
-        xCoord = 539.0 / 2695.0;
-        yCoord = 0.0;
+        row = 4;
         break;
       }
-      default:
+      case Suit::eJOKER:
       {
+        row = 5;
+        break;
+      }
+    }
+
+    // Each row of a suit is placed in ascending order by rank.
+    switch(mData.mRank)
+    {
+      case Rank::eTWO:
+      case Rank::eJOKER:
+      {
+        column = 1;
+        break;
+      }
+      case Rank::eEIGHT:
+      {
+        column = 2;
+        break;
+      }
+      case Rank::eNINE:
+      {
+        column = 3;
+        break;
+      }
+      case Rank::eTEN:
+      {
+        column = 4;
+        break;
+      }
+      case Rank::eJACK:
+      {
+        column = 5;
+        break;
+      }
+      case Rank::eQUEEN:
+      {
+        column = 6;
+        break;
+      }
+      case Rank::eKING:
+      {
+        column = 7;
+        break;
+      }
+      case Rank::eACE:
+      {
+        column = 8;
         break;
       }
     }
   }
-  else
+
+  // Use the row and column to determine the card's texture coordinates.
+  double width = aTexture.GetWidth();
+  double height = aTexture.GetHeight();
+  double cardWidth = 539.0;
+  double cardHeight = 766.0;
+  double xCoord, yCoord = 0.0;
+
+  switch(aCorner)
   {
-    switch(aCorner)
+    case Corner::eTOP_LEFT:
     {
-      case Corner::eTOP_LEFT:
-      {
-        xCoord = 1617.0 / 2695.0;
-        yCoord = 766.0 / 5362.0;
-        break;
-      }
-      case Corner::eTOP_RIGHT:
-      {
-        xCoord = 2156.0 / 2695.0;
-        yCoord = 766.0 / 5362.0;
-        break;
-      }
-      case Corner::eBOTTOM_LEFT:
-      {
-        xCoord = 1617.0 / 2695.0;
-        yCoord = 0.0;
-        break;
-      }
-      case Corner::eBOTTOM_RIGHT:
-      {
-        xCoord = 2156.0 / 2695.0;
-        yCoord = 0.0;
-        break;
-      }
-      default:
-      {
-        break;
-      }
+      xCoord = (cardWidth * (column - 1)) / width;
+      yCoord = (cardHeight * (6 - row)) / height;
+      break;
+    }
+    case Corner::eTOP_RIGHT:
+    {
+      xCoord = (cardWidth * column) / width;
+      yCoord = (cardHeight * (6 - row)) / height;
+      break;
+    }
+    case Corner::eBOTTOM_LEFT:
+    {
+      xCoord = (cardWidth * (column - 1)) / width;
+      yCoord = (cardHeight * (5 - row)) / height;
+      break;
+    }
+    case Corner::eBOTTOM_RIGHT:
+    {
+      xCoord = (cardWidth * column) / width;
+      yCoord = (cardHeight * (5 - row)) / height;
+      break;
+    }
+    default:
+    {
+      break;
     }
   }
 
