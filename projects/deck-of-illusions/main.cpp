@@ -13,23 +13,28 @@ void ShuffleCards(std::vector<CardObject*> aCards)
 {
   for(int i = 0; i < aCards.size(); ++i)
   {
-    // Place this card on top of the deck.
-    //aCards[i]->Translate(glm::vec3(0.0, (0.01 * i) - 1.0, -5.0));
-    aCards[i]->Translate(glm::vec3(0.0, (1.0 * i), -5.0));
+    // Rotate the card to face away from the viewer.
+    aCards[i]->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
 
+    // Rotate the card to lie flat (well, flat-ish).
+    aCards[i]->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
+    aCards[i]->Rotate(15, glm::vec3(0.0, 0.0, 1.0));
+
+    // Position the card high above the camera.
+    aCards[i]->Translate(glm::vec3(0.0, (2.0 * (i + 1)), -5.0));
+
+    // Move this card to the top of the deck.
     for(auto& c : aCards[i]->GetComponentsOfType<CardMovementComponent>())
     {
-      c->MoveTo(glm::vec3(0.0, (1.0 * i), (-3.5 + (1.0 * i) - (0.01 * i))), 0.002);
+      glm::vec3 topOfDeck = glm::vec3(0.0, (0.01 * i), -5.0);
+      c->MoveTo(topOfDeck, 0.002);
     }
-
-    // Rotate the card so it's lying down.
-    aCards[i]->Rotate(90, glm::vec3(1.0, 0.0, 0.0));
   }
 }
 
 int main()
 {
-  env.CreateWindow("05-camera-and-3d-objects", 800, 600);
+  env.CreateWindow("Deck of Illusions", 800, 600);
   UrsineCore::Scene scene;
 
   DeckOfIllusions::CardData data;
@@ -100,6 +105,8 @@ int main()
   }
 
   ShuffleCards(scene.GetObjectsOfType<CardObject>());
+
+  scene.GetDefaultCamera()->Translate(glm::vec3(0.0, 1.0, 0.0));
 
   env.LoadScene(scene);
   env.Run();

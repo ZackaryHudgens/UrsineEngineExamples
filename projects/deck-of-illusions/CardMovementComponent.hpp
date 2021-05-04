@@ -31,13 +31,8 @@ namespace DeckOfIllusions
       CardState mState;
 
       glm::vec3 mTargetPosition;
-      glm::vec3 mIdleReferencePosition;
 
       double mMoveSpeed;
-
-      int mIdleBuffer;
-
-      bool mIdlePositionInitialized;
   };
 }
 
