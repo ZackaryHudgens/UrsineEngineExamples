@@ -14,7 +14,7 @@ using DeckOfIllusions::CardMovementComponent;
 using DeckOfIllusions::CardObject;
 
 CardObject::CardObject(const CardData& aData)
-  : GameObject()
+  : GameObject(aData.mDescription)
   , mData(aData)
 {
   // Handle invalid data due to Jokers

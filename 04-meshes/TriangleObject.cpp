@@ -16,8 +16,8 @@ using UrsineRenderer::Texture;
 using example_four::TriangleInputComponent;
 using example_four::TriangleObject;
 
-TriangleObject::TriangleObject()
-  : GameObject()
+TriangleObject::TriangleObject(const std::string& aName)
+  : GameObject(aName)
 {
   auto triangleMesh = std::make_unique<MeshComponent>();
 

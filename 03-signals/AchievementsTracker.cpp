@@ -20,17 +20,17 @@ AchievementsTracker::AchievementsTracker()
      * If they have, update their Q count. If their Q count is 5, award them
      * the Q Count achievement.
      */
-    auto player = mQPressMap.find(aPlayer->GetPlayerName());
+    auto player = mQPressMap.find(aPlayer->GetName());
     if(player == mQPressMap.end())
     {
-      mQPressMap.emplace(aPlayer->GetPlayerName(), 1);
+      mQPressMap.emplace(aPlayer->GetName(), 1);
     }
     else
     {
       player->second++;
       if(player->second == 5)
       {
-        AwardAchievement(aPlayer->GetPlayerName() +
+        AwardAchievement(aPlayer->GetName() +
                          " has pressed the Q key 5 times!");
       }
     }

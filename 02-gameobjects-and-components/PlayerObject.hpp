@@ -3,16 +3,18 @@
 
 #include <UrsineEngine/GameObject.hpp>
 
+using UrsineCore::GameObject;
+
 namespace example_two
 {
   /**
    * A basic player class. Creates and adds a PlayerInputComponent
    * upon construction.
    */
-  class PlayerObject : public UrsineCore::GameObject
+  class PlayerObject : public GameObject
   {
     public:
-      PlayerObject();
+      PlayerObject(const std::string& aName = "Player");
   };
 }
 

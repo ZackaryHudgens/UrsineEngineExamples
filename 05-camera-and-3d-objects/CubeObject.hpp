@@ -9,7 +9,7 @@ namespace example_five
   class CubeObject : public UrsineCore::GameObject
   {
     public:
-      CubeObject();
+      CubeObject(const std::string& aName = "Cube");
 
     private:
       void SetupShaders(UrsineRenderer::MeshComponent& aMesh);

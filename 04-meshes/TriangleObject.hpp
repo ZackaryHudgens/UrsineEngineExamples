@@ -9,7 +9,7 @@ namespace example_four
   class TriangleObject : public UrsineCore::GameObject
   {
     public:
-      TriangleObject();
+      TriangleObject(const std::string& aName = "Triangle");
 
     private:
       void SetupShaders(UrsineRenderer::MeshComponent& aMesh);

@@ -6,8 +6,7 @@ using example_three::PlayerObject;
 using example_three::PlayerInputComponent;
 
 PlayerObject::PlayerObject(const std::string& aName)
-  : UrsineCore::GameObject()
-  , mName(aName)
+  : UrsineCore::GameObject(aName)
 {
   AddComponent(std::make_unique<PlayerInputComponent>());
 }

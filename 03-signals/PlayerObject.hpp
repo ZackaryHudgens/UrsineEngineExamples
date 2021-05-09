@@ -13,12 +13,7 @@ namespace example_three
   class PlayerObject : public UrsineCore::GameObject
   {
     public:
-      PlayerObject(const std::string& aName);
-
-      std::string GetPlayerName() const { return mName; }
-
-    private:
-      std::string mName;
+      PlayerObject(const std::string& aName = "Player");
   };
 }
 

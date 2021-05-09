@@ -1,41 +1,24 @@
 #include <UrsineEngine/Environment.hpp>
 #include <UrsineEngine/Scene.hpp>
 
-#include "CardMovementComponent.hpp"
 #include "CardObject.hpp"
+#include "DeckObject.hpp"
 
 using UrsineCore::Scene;
 
-using DeckOfIllusions::CardMovementComponent;
 using DeckOfIllusions::CardObject;
-
-void ShuffleCards(std::vector<CardObject*> aCards)
-{
-  for(int i = 0; i < aCards.size(); ++i)
-  {
-    // Rotate the card to face away from the viewer.
-    aCards[i]->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
-
-    // Rotate the card to lie flat (well, flat-ish).
-    aCards[i]->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
-    aCards[i]->Rotate(15, glm::vec3(0.0, 0.0, 1.0));
-
-    // Position the card high above the camera.
-    aCards[i]->Translate(glm::vec3(0.0, (2.0 * (i + 1)), -5.0));
-
-    // Move this card to the top of the deck.
-    for(auto& c : aCards[i]->GetComponentsOfType<CardMovementComponent>())
-    {
-      glm::vec3 topOfDeck = glm::vec3(0.0, (0.01 * i), -5.0);
-      c->MoveTo(topOfDeck, 0.002);
-    }
-  }
-}
+using DeckOfIllusions::DeckObject;
 
 int main()
 {
   env.CreateWindow("Deck of Illusions", 800, 600);
   UrsineCore::Scene scene;
+
+  // Create a DeckObject.
+  auto deck = std::make_unique<DeckObject>();
+
+  // TODO: set it up so that cards are added to the deck
+  // from some callback (input maybe)
 
   DeckOfIllusions::CardData data;
   for(int i = 0; i < 34; ++i)
@@ -101,12 +84,7 @@ int main()
     }
 
     auto card = std::make_unique<DeckOfIllusions::CardObject>(data);
-    scene.AddObject(std::move(card));
   }
-
-  ShuffleCards(scene.GetObjectsOfType<CardObject>());
-
-  scene.GetDefaultCamera()->Translate(glm::vec3(0.0, 1.0, 0.0));
 
   env.LoadScene(scene);
   env.Run();

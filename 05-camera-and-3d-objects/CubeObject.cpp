@@ -15,8 +15,8 @@ using UrsineRenderer::Texture;
 
 using example_five::CubeObject;
 
-CubeObject::CubeObject()
-  : GameObject()
+CubeObject::CubeObject(const std::string& aName)
+  : GameObject(aName)
 {
   auto cubeMesh = std::make_unique<MeshComponent>();
 
