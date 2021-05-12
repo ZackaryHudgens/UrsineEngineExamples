@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <glm/gtx/string_cast.hpp>
+
 #include "CardMovementComponent.hpp"
 
 using DeckOfIllusions::CardData;
@@ -80,8 +82,12 @@ void DeckObject::AddCard(std::unique_ptr<CardObject> aCard)
   // Move the card to the top of the deck.
   for(auto& moveComponent : aCard->GetComponentsOfType<CardMovementComponent>())
   {
+    std::cout << glm::to_string(topOfDeck) << std::endl;
     moveComponent->MoveTo(topOfDeck, 0.002);
   }
+
+  // Finally, add the card as a child GameObject.
+  AddChild(std::move(aCard));
 }
 
 void DeckObject::Draw()
