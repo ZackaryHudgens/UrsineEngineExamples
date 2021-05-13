@@ -2,9 +2,6 @@
 #define CARDOBJECT_HPP
 
 #include <UrsineEngine/GameObject.hpp>
-#include <UrsineEngine/MeshComponent.hpp>
-
-using UrsineRenderer::Texture;
 
 namespace DeckOfIllusions
 {
@@ -43,22 +40,6 @@ namespace DeckOfIllusions
       CardObject(const CardData& aData);
 
     private:
-      enum class Corner
-      {
-        eTOP_LEFT,
-        eTOP_RIGHT,
-        eBOTTOM_LEFT,
-        eBOTTOM_RIGHT
-      };
-
-      glm::vec2 GetTextureCoords(const Texture& aTexture,
-                                 const CardData& aData,
-                                 const Corner& aCorner,
-                                 bool aBack = false);
-
-      void SetupShaders(UrsineRenderer::MeshComponent& aMesh);
-      void SetupVertexInfo(UrsineRenderer::MeshComponent& aMesh);
-
       CardData mData;
   };
 }

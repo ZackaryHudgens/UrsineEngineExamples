@@ -35,6 +35,8 @@ void CardMovementComponent::Update()
     {
       break;
     }
+    {
+    }
   }
 }
 

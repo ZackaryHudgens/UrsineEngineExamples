@@ -15,11 +15,9 @@ int main()
 
   // Create a DeckObject.
   auto deck = std::make_unique<DeckObject>();
+  deck->Translate(glm::vec3(0.0, 0.0, -5.0));
   deck->LoadDeckFromFile("resources/deck.txt");
-  deck->Translate(glm::vec3(1.0, 0.0, -15.0));
   scene.AddObject(std::move(deck));
-
-  scene.GetDefaultCamera()->Translate(glm::vec3(0.0, 0.0, 5.0));
 
   env.LoadScene(scene);
   env.Run();

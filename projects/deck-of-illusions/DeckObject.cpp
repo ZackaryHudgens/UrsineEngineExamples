@@ -14,6 +14,7 @@ using DeckOfIllusions::Suit;
 
 DeckObject::DeckObject(const std::string& aName)
   : GameObject(aName)
+  , mCardsInitialized(false)
 {
 }
 
@@ -34,8 +35,7 @@ bool DeckObject::LoadDeckFromFile(const std::string& aFile)
       success = ParseDataString(data, line);
       if(success)
       {
-        auto card = std::make_unique<CardObject>(data);
-        AddCard(std::move(card));
+        AddCard(data);
       }
       else
       {
@@ -54,40 +54,10 @@ bool DeckObject::LoadDeckFromFile(const std::string& aFile)
   return success;
 }
 
-void DeckObject::AddCard(std::unique_ptr<CardObject> aCard)
+void DeckObject::AddCard(const CardData& aData)
 {
-  // Rotate the card to face away from the viewer.
-  aCard->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
-
-  // Rotate the card to lie flat.
-  aCard->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
-
-  // Position the card high above the top of the deck.
-  std::vector<GameObject*> cards;
-  for(const auto& child : GetChildren())
-  {
-    if(dynamic_cast<CardObject*>(child) != nullptr)
-    {
-      cards.emplace_back(child);
-    }
-  }
-
-  glm::vec3 topOfDeck = glm::vec3(GetPosition().x,
-                                  (0.01 * cards.size()),
-                                  GetPosition().z);
-  aCard->Translate(glm::vec3(topOfDeck.x,
-                             topOfDeck.y + (2.0 * cards.size()),
-                             topOfDeck.z));
-
-  // Move the card to the top of the deck.
-  for(auto& moveComponent : aCard->GetComponentsOfType<CardMovementComponent>())
-  {
-    std::cout << glm::to_string(topOfDeck) << std::endl;
-    moveComponent->MoveTo(topOfDeck, 0.002);
-  }
-
-  // Finally, add the card as a child GameObject.
-  AddChild(std::move(aCard));
+  mCards.emplace_back(aData);
+  CreateCardObject(aData);
 }
 
 void DeckObject::Draw()
@@ -227,4 +197,42 @@ bool DeckObject::GetRankFromCharacter(CardData& aData,
   }
 
   return success;
+}
+
+void DeckObject::CreateCardObject(const CardData& aData)
+{
+  // Create a new card object with this data.
+  auto cardObj = std::make_unique<CardObject>(aData);
+
+  // Rotate the card to face away from the viewer.
+  cardObj->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
+
+  // Rotate the card to lie flat.
+  cardObj->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
+
+  // Position the card high above the top of the deck.
+  std::vector<GameObject*> cards;
+  for(const auto& child : GetChildren())
+  {
+    if(dynamic_cast<CardObject*>(child) != nullptr)
+    {
+      cards.emplace_back(child);
+    }
+  }
+
+  glm::vec3 topOfDeck = glm::vec3(GetPosition().x,
+                                  (0.01 * cards.size()),
+                                  GetPosition().z);
+  cardObj->Translate(glm::vec3(topOfDeck.x,
+                               topOfDeck.y + (2.0 * cards.size()),
+                               topOfDeck.z));
+
+  // Move the card to the top of the deck.
+  for(auto& moveComponent : cardObj->GetComponentsOfType<CardMovementComponent>())
+  {
+    moveComponent->MoveTo(topOfDeck, 0.002);
+  }
+
+  // Finally, add the card as a child GameObject.
+  AddChild(std::move(cardObj));
 }

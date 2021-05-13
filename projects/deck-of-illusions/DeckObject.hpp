@@ -16,7 +16,7 @@ namespace DeckOfIllusions
 
       bool LoadDeckFromFile(const std::string& aFile);
 
-      void AddCard(std::unique_ptr<CardObject> aCard);
+      void AddCard(const CardData& aData);
       void Draw();
       void Shuffle();
 
@@ -27,6 +27,12 @@ namespace DeckOfIllusions
                                 const char& aChar);
       bool GetRankFromCharacter(CardData& aData,
                                 const char& aChar);
+
+      void CreateCardObject(const CardData& aData);
+
+      std::vector<CardData> mCards;
+
+      bool mCardsInitialized;
   };
 }
 
