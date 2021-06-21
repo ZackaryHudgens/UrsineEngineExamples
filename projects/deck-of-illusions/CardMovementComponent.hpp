@@ -3,18 +3,14 @@
 
 #include <UrsineEngine/Component.hpp>
 #include <UrsineEngine/GameObject.hpp>
+#include <UrsineEngine/Signal.hpp>
+
+#include "CardObject.hpp"
 
 using UrsineCore::Component;
 
 namespace DeckOfIllusions
 {
-  enum class CardState
-  {
-    eIDLE,
-    eMOVING_TO_POSITION,
-    eBEING_DRAWN
-  };
-
   class CardMovementComponent : public Component
   {
     public:
@@ -23,16 +19,22 @@ namespace DeckOfIllusions
       void Update() override;
 
       void MoveTo(const glm::vec3& aPosition, double aSpeed);
-
-      void SetState(const CardState& aState);
-      CardState GetState() const { return mState; }
+      void RotateTo(double aDegrees,
+                    const glm::vec3& aAxis,
+                    double aSpeed);
 
     private:
-      CardState mState;
-
       glm::vec3 mTargetPosition;
 
+      double mTargetRotation;
+      double mCurrentRotation;
+      glm::vec3 mRotationAxis;
+
       double mMoveSpeed;
+      double mRotationSpeed;
+
+      bool mMoving;
+      bool mRotating;
   };
 }
 

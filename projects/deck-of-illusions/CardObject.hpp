@@ -37,11 +37,19 @@ namespace DeckOfIllusions
   class CardObject : public UrsineCore::GameObject
   {
     public:
-      CardObject(const CardData& aData);
+      CardObject(const CardData& aData, const std::string& aName = "Card");
+
+      CardData GetData() const { return mData; }
 
     private:
       CardData mData;
   };
+
+  typedef UrsineCore::SignalT<CardObject*> CardFinishedMovingSignal;
+  typedef UrsineCore::SignalT<CardObject*> CardFinishedRotatingSignal;
+
+  extern CardFinishedMovingSignal   CardFinishedMoving;
+  extern CardFinishedRotatingSignal CardFinishedRotating;
 }
 
 #endif

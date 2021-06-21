@@ -8,7 +8,6 @@
 #include <iostream>
 
 using UrsineRenderer::Camera;
-using UrsineRenderer::MeshComponent;
 
 using example_five::CameraInputComponent;
 

@@ -14,7 +14,7 @@ CardMeshComponent::CardMeshComponent(const CardData& aData)
 {
   SetupShaders();
   SetupVertexInfo(aData);
-  SetCurrentShader("cardShader");
+  SetCurrentShader("cardVanishingShader");
 }
 
 void CardMeshComponent::SetupShaders()
@@ -26,6 +26,14 @@ void CardMeshComponent::SetupShaders()
   Shader cardShader(vertexFile.begin(), fragmentFile.begin());
   cardShader.SetInt("texSampler", 0);
   AddShader("cardShader", cardShader);
+
+  fs = cmrc::ShaderLib_Deck::get_filesystem();
+  vertexFile = fs.open("resources/shaders/CardVanishingShader.vert");
+  fragmentFile = fs.open("resources/shaders/CardVanishingShader.frag");
+
+  Shader cardVanishingShader(vertexFile.begin(), fragmentFile.begin());
+  cardShader.SetInt("texSampler", 0);
+  AddShader("cardVanishingShader", cardVanishingShader);
 }
 
 void CardMeshComponent::SetupVertexInfo(const CardData& aData)

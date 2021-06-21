@@ -10,7 +10,9 @@ include("cmake/CMakeRC.cmake")
 
 # Create a library containing the shader resources.
 cmrc_add_resource_library(ShaderLib_Deck resources/shaders/CardShader.frag
-                                         resources/shaders/CardShader.vert)
+                                         resources/shaders/CardShader.vert
+                                         resources/shaders/CardVanishingShader.frag
+                                         resources/shaders/CardVanishingShader.vert)
 
 target_link_libraries(deck-of-illusions PUBLIC
                       ${URSINE_LIBRARIES}

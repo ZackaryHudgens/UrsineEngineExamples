@@ -9,15 +9,26 @@ using UrsineCore::GameObject;
 
 namespace DeckOfIllusions
 {
+  enum class DeckState
+  {
+    eIDLE,
+    eADDING_CARD,
+    eDRAWING_CARD,
+    eWAITING_FOR_FLIP
+  };
+
   class DeckObject : public GameObject
   {
     public:
       DeckObject(const std::string& aName = "Deck");
 
       bool LoadDeckFromFile(const std::string& aFile);
-
       void AddCard(const CardData& aData);
+
+      DeckState GetState() const { return mState; }
+
       void Draw();
+      void FlipCard();
       void Shuffle();
 
     private:
@@ -27,12 +38,15 @@ namespace DeckOfIllusions
                                 const char& aChar);
       bool GetRankFromCharacter(CardData& aData,
                                 const char& aChar);
+      void AddIndexToName(std::string& aName) const;
 
-      void CreateCardObject(const CardData& aData);
+      void HandleObjectMoved(GameObject* aObject);
+      void HandleCardFinishedMoving(CardObject* aCard);
+      void HandleCardFinishedRotating(CardObject* aCard);
 
-      std::vector<CardData> mCards;
+      DeckState mState;
 
-      bool mCardsInitialized;
+      std::vector<CardObject*> mCards;
   };
 }
 

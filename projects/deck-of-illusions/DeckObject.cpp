@@ -1,10 +1,13 @@
 #include "DeckObject.hpp"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <random>
 
-#include <glm/gtx/string_cast.hpp>
+#include <UrsineEngine/Environment.hpp>
 
+#include "DeckInputComponent.hpp"
 #include "CardMovementComponent.hpp"
 
 using DeckOfIllusions::CardData;
@@ -12,12 +15,41 @@ using DeckOfIllusions::DeckObject;
 using DeckOfIllusions::Rank;
 using DeckOfIllusions::Suit;
 
+/**
+ * The constructor for the DeckObject.
+ *
+ * @param aName The name to assign to this GameObject.
+ */
 DeckObject::DeckObject(const std::string& aName)
   : GameObject(aName)
-  , mCardsInitialized(false)
+  , mState(DeckState::eIDLE)
 {
+  /**
+   * Connect signals.
+   */
+  UrsineCore::ObjectMoved.Connect(*this, [this](GameObject* aObject)
+  {
+    this->HandleObjectMoved(aObject);
+  });
+
+  CardFinishedMoving.Connect(*this, [this](CardObject* aCard)
+  {
+    this->HandleCardFinishedMoving(aCard);
+  });
+
+  /**
+   * Add components.
+   */
+  AddComponent(std::make_unique<DeckInputComponent>());
 }
 
+/**
+ * Loads the deck from a file, creating a CardObject for each valid
+ * line of data.
+ *
+ * @param aFile The file to load from.
+ * @return True if successful, false otherwise.
+ */
 bool DeckObject::LoadDeckFromFile(const std::string& aFile)
 {
   bool success = true;
@@ -40,7 +72,6 @@ bool DeckObject::LoadDeckFromFile(const std::string& aFile)
       else
       {
         std::cout << "Couldn't parse line: " << line << std::endl;
-        break;
       }
     }
   }
@@ -54,18 +85,164 @@ bool DeckObject::LoadDeckFromFile(const std::string& aFile)
   return success;
 }
 
+/**
+ * Adds a card to the DeckObject, initially placing it high above the
+ * top of the deck, then moving it downward.
+ *
+ * @param aData The CardData to assign to this card.
+ */
 void DeckObject::AddCard(const CardData& aData)
 {
-  mCards.emplace_back(aData);
-  CreateCardObject(aData);
+  // Update our state.
+  mState = DeckState::eADDING_CARD;
+
+  // Create a new card object with this data.
+  std::string name = "Card";
+  AddIndexToName(name);
+  auto cardObj = std::make_unique<CardObject>(aData, name);
+
+  // Rotate the card to face away from the viewer.
+  cardObj->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
+
+  // Rotate the card to lie flat.
+  cardObj->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
+
+  // Position the card high above the top of the deck.
+  std::vector<CardObject*> cards = GetChildrenOfType<CardObject>();
+  glm::vec3 topOfDeck = glm::vec3(GetPosition().x,
+                                  (0.01 * cards.size()),
+                                  GetPosition().z);
+  cardObj->Translate(glm::vec3(topOfDeck.x,
+                               topOfDeck.y + (2.0 * cards.size()),
+                               topOfDeck.z));
+
+  // Move the card to the top of the deck.
+  for(auto& moveComponent : cardObj->GetComponentsOfType<CardMovementComponent>())
+  {
+    moveComponent->MoveTo(topOfDeck, 0.02);
+  }
+
+  // Add the card as a child GameObject.
+  AddChild(std::move(cardObj));
+
+  // Keep track of the order of cards.
+  CardObject* card = dynamic_cast<CardObject*>(GetChild(name));
+  if(card != nullptr)
+  {
+    mCards.emplace_back(card);
+  }
 }
 
+/**
+ * Draws a card, moving it upward and waiting for the user to 
+ * flip it.
+ */
 void DeckObject::Draw()
 {
+  switch(mState)
+  {
+    case DeckState::eIDLE:
+    {
+      if(!mCards.empty())
+      {
+        mState = DeckState::eDRAWING_CARD;
+
+        // Move the card high above the deck,
+        // and rotate it back to vertical.
+        for(auto& moveComponent : mCards.back()->GetComponentsOfType<CardMovementComponent>())
+        {
+          glm::vec3 dest = glm::vec3(GetPosition().x,
+                                     2.0,
+                                     GetPosition().z);
+          moveComponent->MoveTo(dest, 0.02);
+          moveComponent->RotateTo(-55, glm::vec3(1.0, 0.0, 0.0), 0.02);
+        }
+      }
+      break;
+    }
+    case DeckState::eADDING_CARD:
+    case DeckState::eDRAWING_CARD:
+    case DeckState::eWAITING_FOR_FLIP:
+    default:
+    {
+      break;
+    }
+  }
+}
+
+/**
+ * Flips the drawn card if we're in the correct state.
+ */
+void DeckObject::FlipCard()
+{
+  switch(mState)
+  {
+    case DeckState::eIDLE:
+    case DeckState::eADDING_CARD:
+    case DeckState::eDRAWING_CARD:
+    {
+      break;
+    }
+    case DeckState::eWAITING_FOR_FLIP:
+    {
+      if(!mCards.empty())
+      {
+        // Rotate the card around to face the viewer.
+        for(auto& moveComponent : mCards.back()->GetComponentsOfType<CardMovementComponent>())
+        {
+          moveComponent->RotateTo(180, glm::vec3(0.0, 1.0, 0.0), 0.02);
+        }
+      }
+      break;
+    }
+    default:
+    {
+      break;
+    }
+  }
 }
 
 void DeckObject::Shuffle()
 {
+  switch(mState)
+  {
+    case DeckState::eIDLE:
+    {
+      // Clear the list of card references.
+      mCards.clear();
+
+      std::vector<CardData> dataList;
+      for(auto& obj : GetChildren())
+      {
+        auto cardObj = dynamic_cast<CardObject*>(obj);
+        if(cardObj != nullptr)
+        {
+          // Grab this card's data and place it in the temporary list.
+          dataList.emplace_back(cardObj->GetData());
+
+          // Remove this CardObject.
+          RemoveChild(obj->GetName());
+        }
+      }
+
+      // Shuffle the card data.
+      std::random_shuffle(dataList.begin(), dataList.end());
+
+      // Re-add the cards in their new random order.
+      for(const auto& data : dataList)
+      {
+        AddCard(data);
+      }
+      break;
+    }
+    case DeckState::eADDING_CARD:
+    case DeckState::eDRAWING_CARD:
+    case DeckState::eWAITING_FOR_FLIP:
+    default:
+    {
+      break;
+    }
+  }
 }
 
 bool DeckObject::ParseDataString(CardData& aData,
@@ -199,40 +376,109 @@ bool DeckObject::GetRankFromCharacter(CardData& aData,
   return success;
 }
 
-void DeckObject::CreateCardObject(const CardData& aData)
+/**
+ * A function that adds an index to a string
+ * in order to create a unique name for a GameObject.
+ *
+ * @param aName The name to modify.
+ */
+void DeckObject::AddIndexToName(std::string& aName) const
 {
-  // Create a new card object with this data.
-  auto cardObj = std::make_unique<CardObject>(aData);
-
-  // Rotate the card to face away from the viewer.
-  cardObj->Rotate(180, glm::vec3(0.0, 1.0, 0.0));
-
-  // Rotate the card to lie flat.
-  cardObj->Rotate(55, glm::vec3(1.0, 0.0, 0.0));
-
-  // Position the card high above the top of the deck.
-  std::vector<GameObject*> cards;
-  for(const auto& child : GetChildren())
+  std::string newName = aName;
+  int index = 0;
+  while(GetChild(newName) != nullptr)
   {
-    if(dynamic_cast<CardObject*>(child) != nullptr)
+    newName = aName;
+    newName.append("_" + std::to_string(index));
+    ++index;
+  }
+
+  aName = newName;
+}
+
+/**
+ * A handler function for the ObjectMoved signal.
+ * If the GameObject in question is the card that's being
+ * drawn, then we move the scene's default camera to follow it.
+ */
+void DeckObject::HandleObjectMoved(GameObject* aObject)
+{
+  CardObject* cardObj = dynamic_cast<CardObject*>(aObject);
+  if(cardObj != nullptr)
+  {
+    switch(mState)
     {
-      cards.emplace_back(child);
+      case DeckState::eIDLE:
+      case DeckState::eADDING_CARD:
+      {
+        break;
+      }
+      case DeckState::eDRAWING_CARD:
+      {
+        if(!mCards.empty())
+        {
+          if(cardObj == mCards.back())
+          {
+            Camera* cam = env.GetCurrentScene()->GetDefaultCamera();
+
+            // Stay level with the card.
+            cam->SetPosition(glm::vec3(cam->GetPosition().x,
+                                       cardObj->GetPosition().y,
+                                       cam->GetPosition().z));
+          }
+        }
+        break;
+      }
+      case DeckState::eWAITING_FOR_FLIP:
+      default:
+      {
+        break;
+      }
     }
   }
+}
 
-  glm::vec3 topOfDeck = glm::vec3(GetPosition().x,
-                                  (0.01 * cards.size()),
-                                  GetPosition().z);
-  cardObj->Translate(glm::vec3(topOfDeck.x,
-                               topOfDeck.y + (2.0 * cards.size()),
-                               topOfDeck.z));
-
-  // Move the card to the top of the deck.
-  for(auto& moveComponent : cardObj->GetComponentsOfType<CardMovementComponent>())
+/**
+ * A handler function for the CardFinishedMoving signal.
+ * If the CardObject in question is the most recently added
+ * card, then the deck can transition to an idle state.
+ *
+ * @param aCard The CardObject that finished moving.
+ */
+void DeckObject::HandleCardFinishedMoving(CardObject* aCard)
+{
+  switch(mState)
   {
-    moveComponent->MoveTo(topOfDeck, 0.002);
+    case DeckState::eIDLE:
+    {
+      break;
+    }
+    case DeckState::eADDING_CARD:
+    {
+      if(!mCards.empty())
+      {
+        if(aCard == mCards.back())
+        {
+          mState = DeckState::eIDLE;
+        }
+      }
+      break;
+    }
+    case DeckState::eDRAWING_CARD:
+    {
+      if(!mCards.empty())
+      {
+        if(aCard == mCards.back())
+        {
+          mState = DeckState::eWAITING_FOR_FLIP;
+        }
+      }
+      break;
+    }
+    case DeckState::eWAITING_FOR_FLIP:
+    default:
+    {
+      break;
+    }
   }
-
-  // Finally, add the card as a child GameObject.
-  AddChild(std::move(cardObj));
 }

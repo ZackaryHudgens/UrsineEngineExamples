@@ -1,74 +1,94 @@
 #include "CardMovementComponent.hpp"
 
+#include <iostream>
+
 using DeckOfIllusions::CardMovementComponent;
 
 CardMovementComponent::CardMovementComponent()
   : Component()
-  , mState(CardState::eIDLE)
   , mTargetPosition(0.0, 0.0, 0.0)
+  , mTargetRotation(0.0)
+  , mCurrentRotation(0.0)
+  , mRotationAxis(0.0, 0.0, 0.0)
   , mMoveSpeed(0.0)
+  , mRotationSpeed(0.0)
+  , mMoving(false)
+  , mRotating(false)
 {
 }
 
 void CardMovementComponent::Update()
 {
-  switch(mState)
+  /**
+   * Handle any card movement.
+   */
+  if(mMoving)
   {
-    case CardState::eIDLE:
-    {
-      break;
-    }
-    case CardState::eMOVING_TO_POSITION:
-    {
-      auto vec = glm::mix(GetParent()->GetPosition(), mTargetPosition, mMoveSpeed);
-      GetParent()->Translate(vec);
+    auto vec = glm::mix(GetParent()->GetPosition(), mTargetPosition, mMoveSpeed);
 
-      if(fabs(GetParent()->GetPosition().x - mTargetPosition.x) < 0.05 &&
-         fabs(GetParent()->GetPosition().y - mTargetPosition.y) < 0.05 &&
-         fabs(GetParent()->GetPosition().z - mTargetPosition.z) < 0.05)
-      {
-        mState = CardState::eIDLE;
-      }
-      break;
-    }
-    case CardState::eBEING_DRAWN:
+    if(fabs(vec.x - mTargetPosition.x) < 0.005 &&
+       fabs(vec.y - mTargetPosition.y) < 0.005 &&
+       fabs(vec.z - mTargetPosition.z) < 0.005)
     {
-      break;
+      std::cout << "finished moving" << std::endl;
+      // Finalize the translation.
+      GetParent()->SetPosition(mTargetPosition);
+
+      // Use the signal to notify everyone that we've finished moving.
+      CardObject* cardObj = dynamic_cast<CardObject*>(GetParent());
+      CardFinishedMoving.Notify(cardObj);
+
+      mMoving = false;
     }
+    else
     {
+      GetParent()->SetPosition(vec);
+    }
+  }
+
+  /**
+   * Handle any card rotation.
+   */
+  if(mRotating)
+  {
+    if(fabs(mTargetRotation - mCurrentRotation) < 0.5)
+    {
+      std::cout << "finished rotating" << std::endl;
+      // Finalize the rotation.
+      GetParent()->Rotate(mTargetRotation - mCurrentRotation, mRotationAxis);
+
+      // Use the signal to notify everyone that we've finished rotating.
+      CardObject* cardObj = dynamic_cast<CardObject*>(GetParent());
+      CardFinishedRotating.Notify(cardObj);
+
+      mCurrentRotation = 0.0;
+      mRotating = false;
+    }
+    else
+    {
+      double temp = glm::mix(mCurrentRotation,
+                             mTargetRotation,
+                             mRotationSpeed);
+
+      GetParent()->Rotate(temp - mCurrentRotation, mRotationAxis);
+      mCurrentRotation = temp;
     }
   }
 }
 
 void CardMovementComponent::MoveTo(const glm::vec3& aPosition, double aSpeed)
 {
-  mState = CardState::eMOVING_TO_POSITION;
   mTargetPosition = aPosition;
   mMoveSpeed = aSpeed;
+  mMoving = true;
 }
 
-void CardMovementComponent::SetState(const CardState& aState)
+void CardMovementComponent::RotateTo(double aDegrees,
+                                     const glm::vec3& aAxis,
+                                     double aSpeed)
 {
-  switch(aState)
-  {
-    case CardState::eIDLE:
-    {
-      // Just set the state for this case; in Update(), we'll begin
-      // assigning the object a random target position for a
-      // "magically floating" effect.
-      mState = aState;
-      break;
-    }
-    case CardState::eMOVING_TO_POSITION:
-    {
-      // This state is only used in conjunction with the MoveTo
-      // function; don't do anything in this case.
-      break;
-    }
-    case CardState::eBEING_DRAWN:
-    {
-      // Don't know what to do here yet.
-      break;
-    }
-  }
+  mTargetRotation = aDegrees;
+  mRotationAxis = aAxis;
+  mRotationSpeed = aSpeed;
+  mRotating = true;
 }

@@ -1,12 +1,14 @@
 #include "CardObject.hpp"
 
+#include <UrsineEngine/Environment.hpp>
+
 #include "CardMeshComponent.hpp"
 #include "CardMovementComponent.hpp"
 
 using DeckOfIllusions::CardObject;
 
-CardObject::CardObject(const CardData& aData)
-  : GameObject(aData.mDescription)
+CardObject::CardObject(const CardData& aData, const std::string& aName)
+  : GameObject(aName)
   , mData(aData)
 {
   // Handle invalid data due to Jokers
@@ -25,3 +27,6 @@ CardObject::CardObject(const CardData& aData)
   auto cardMovement = std::make_unique<CardMovementComponent>();
   AddComponent(std::move(cardMovement));
 }
+
+DeckOfIllusions::CardFinishedMovingSignal DeckOfIllusions::CardFinishedMoving;
+DeckOfIllusions::CardFinishedRotatingSignal DeckOfIllusions::CardFinishedRotating;
