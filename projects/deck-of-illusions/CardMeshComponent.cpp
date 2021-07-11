@@ -229,8 +229,8 @@ glm::vec2 CardMeshComponent::GetTextureCoords(const Texture& aTexture,
   }
 
   // Use the row and column to determine the card's texture coordinates.
-  double width = aTexture.GetWidth();
-  double height = aTexture.GetHeight();
+  double width = aTexture.GetData().mWidth;
+  double height = aTexture.GetData().mHeight;
   double cardWidth = 539.0;
   double cardHeight = 766.0;
   double xCoord, yCoord = 0.0;

@@ -9,7 +9,12 @@ int main()
    * Here, we create a window and run the application. Nothing will happen
    * until you close the window.
    */
-  env.CreateWindow("Hello World!", 800, 600);
+  UrsineCore::GraphicsOptions gOptions;
+  gOptions.mTitle = "Hello World!";
+  gOptions.mWidth = 800;
+  gOptions.mHeight = 600;
+
+  env.Initialize(gOptions);
   env.LoadScene(scene);
   env.Run();
 

@@ -24,7 +24,12 @@ int main()
    * which key you pressed, as well as notifying the global QPressed signal
    * when you press the Q key.
    */
-  env.CreateWindow("Example 02 - GameObjects and Components", 800, 600);
+  UrsineCore::GraphicsOptions gOptions;
+  gOptions.mTitle = "Example 03 - Signals";
+  gOptions.mWidth = 800;
+  gOptions.mHeight = 600;
+
+  env.Initialize(gOptions);
   env.LoadScene(testScene);
   env.Run();
 

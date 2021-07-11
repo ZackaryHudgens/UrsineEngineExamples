@@ -5,7 +5,12 @@
 
 int main()
 {
-  env.CreateWindow("04-meshes", 800, 600);
+  UrsineCore::GraphicsOptions gOptions;
+  gOptions.mTitle = "Example 04 - Meshes";
+  gOptions.mWidth = 800;
+  gOptions.mHeight = 600;
+
+  env.Initialize(gOptions);
 
   UrsineCore::Scene scene;
 

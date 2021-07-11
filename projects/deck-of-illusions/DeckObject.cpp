@@ -119,7 +119,7 @@ void DeckObject::AddCard(const CardData& aData)
   // Move the card to the top of the deck.
   for(auto& moveComponent : cardObj->GetComponentsOfType<CardMovementComponent>())
   {
-    moveComponent->MoveTo(topOfDeck, 0.02);
+    moveComponent->MoveTo(topOfDeck, 0.3);
   }
 
   // Add the card as a child GameObject.
@@ -154,8 +154,8 @@ void DeckObject::Draw()
           glm::vec3 dest = glm::vec3(GetPosition().x,
                                      2.0,
                                      GetPosition().z);
-          moveComponent->MoveTo(dest, 0.02);
-          moveComponent->RotateTo(-55, glm::vec3(1.0, 0.0, 0.0), 0.02);
+          moveComponent->MoveTo(dest, 0.3);
+          moveComponent->RotateTo(-55, glm::vec3(1.0, 0.0, 0.0), 0.3);
         }
       }
       break;
@@ -190,7 +190,7 @@ void DeckObject::FlipCard()
         // Rotate the card around to face the viewer.
         for(auto& moveComponent : mCards.back()->GetComponentsOfType<CardMovementComponent>())
         {
-          moveComponent->RotateTo(180, glm::vec3(0.0, 1.0, 0.0), 0.02);
+          moveComponent->RotateTo(180, glm::vec3(0.0, 1.0, 0.0), 0.3);
         }
       }
       break;

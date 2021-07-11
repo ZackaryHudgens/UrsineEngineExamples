@@ -6,7 +6,12 @@
 
 int main()
 {
-  env.CreateWindow("05-camera-and-3d-objects", 800, 600);
+  UrsineCore::GraphicsOptions gOptions;
+  gOptions.mTitle = "Example 05 - Camera and 3D Objects";
+  gOptions.mWidth = 800;
+  gOptions.mHeight = 600;
+
+  env.Initialize(gOptions);
 
   UrsineCore::Scene scene;
 

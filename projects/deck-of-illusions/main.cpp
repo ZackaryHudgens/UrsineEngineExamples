@@ -10,7 +10,12 @@ using DeckOfIllusions::DeckObject;
 
 int main()
 {
-  env.CreateWindow("Deck of Illusions", 800, 600);
+  UrsineCore::GraphicsOptions gOptions;
+  gOptions.mTitle = "Deck of Illusions";
+  gOptions.mWidth = 800;
+  gOptions.mHeight = 600;
+
+  env.Initialize(gOptions);
   UrsineCore::Scene scene;
 
   // Create a DeckObject.
